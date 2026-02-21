@@ -79,41 +79,41 @@
 
 :root.theme-dark {
 	--gray-0: #ffffff;
-	--gray-50: #f3f4f7;
-	--gray-100: #e3e6ee;
-	--gray-200: #c3cadb;
-	--gray-300: #a3acc8;
-	--gray-400: #8490b5;
-	--gray-500: #6474a2;
-	--gray-600: #505d84;
-	--gray-700: #3d4663;
-	--gray-800: #283044;
-	--gray-900: #141925;
-	--gray-999-basis: 225, 31%, 5%;
-	--gray-999: #090b11;
+	--gray-50: #f0f4f8;
+	--gray-100: #dce3f1;
+	--gray-200: #a7b7d6;
+	--gray-300: #889ac2;
+	--gray-400: #687eab;
+	--gray-500: #496395;
+	--gray-600: #354a73;
+	--gray-700: #233454;
+	--gray-800: #162038;
+	--gray-900: #0a1122;
+	--gray-999-basis: 228, 45%, 4%;
+	--gray-999: #06090f;
 
-	--accent-light: #1c0056;
-	--accent-regular: #7611a6;
-	--accent-dark: #c561f6;
-	--accent-overlay: hsla(280, 89%, 67%, 0.33);
-	--accent-subtle-overlay: hsla(281, 81%, 36%, 0.33);
+	--accent-light: #00f0ff;
+	--accent-regular: #4f46e5;
+	--accent-dark: #cc00ff;
+	--accent-overlay: hsla(180, 100%, 50%, 0.15);
+	--accent-subtle-overlay: hsla(180, 100%, 50%, 0.08);
 	--accent-text-over: var(--gray-0);
 
-	--link-color: var(--accent-dark);
+	--link-color: var(--accent-light);
 
-	--gradient-stop-1: #4c11c6;
-	--gradient-subtle: linear-gradient(150deg, var(--gray-900) 19%, var(--gray-999) 81%);
+	--gradient-stop-1: #00f0ff;
+	--gradient-subtle: linear-gradient(150deg, rgba(22,32,56,0.5) 19%, rgba(6,9,15,0.7) 81%);
 	--gradient-accent-orange: linear-gradient(
 		150deg,
-		#ca7879,
+		#00f0ff,
 		var(--accent-regular),
-		var(--accent-light)
+		var(--accent-dark)
 	);
-	--gradient-stroke: linear-gradient(180deg, var(--gray-600), var(--gray-800));
+	--gradient-stroke: linear-gradient(180deg, rgba(80,93,132,0.4), rgba(35,52,84,0.1));
 
 	--shadow-sm:
-		0px 6px 3px rgba(255, 255, 255, 0.01), 0px 4px 2px rgba(255, 255, 255, 0.01),
-		0px 2px 2px rgba(255, 255, 255, 0.02), 0px 0px 1px rgba(255, 255, 255, 0.03);
+		0px 6px 3px rgba(0, 0, 0, 0.2), 0px 4px 2px rgba(0, 0, 0, 0.2),
+		0px 2px 2px rgba(0, 0, 0, 0.2), 0px 0px 1px rgba(0, 0, 0, 0.2);
 	--shadow-md:
 		0px 28px 11px rgba(255, 255, 255, 0.01), 0px 16px 10px rgba(255, 255, 255, 0.03),
 		0px 7px 7px rgba(255, 255, 255, 0.05), 0px 2px 4px rgba(255, 255, 255, 0.06);

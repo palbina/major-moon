@@ -1,0 +1,47 @@
+# AI Context Documentation
+
+This project uses AI-generated context documentation. Each entry below links to detailed documentation organized by type.
+
+## Features
+
+- **Authentication System** (2026-01-20) - [Details](.claude/context-docs/features/auth-system.md)
+  JWT-based authentication with refresh token rotation and secure session management
+- **Data Grid QIS** (2026-01-15) - [Details](.claude/context-docs/features/data-grid-qis.md)
+  Implemented Quality Inspection System with real-time validation and filtering
+- **Shopping Cart** (2026-01-12) - [Details](.claude/context-docs/features/shopping-cart.md)
+  Real-time shopping cart with WebSocket synchronization across multiple devices
+
+## Bugs
+
+- **Connection Modal Crash** (2026-01-18) - [Details](.claude/context-docs/bugs/connection-modal-crash.md)
+  Fixed race condition in modal lifecycle causing crashes on rapid toggling
+- **Memory Leak in Websockets** (2026-01-10) - [Details](.claude/context-docs/bugs/memory-leak.md)
+  Resolved memory leak caused by unclosed WebSocket connections in component unmounting
+
+## Architecture
+
+- **API Gateway Pattern** (2026-01-25) - [Details](.claude/context-docs/architecture/api-gateway.md)
+  Implemented centralized API gateway for microservices with request routing and rate limiting
+- **Event-Driven Architecture** (2026-01-22) - [Details](.claude/context-docs/architecture/event-driven.md)
+  Transitioned to event-driven architecture using message queue for async processing
+
+## Refactors
+
+- **Component Library Consolidation** (2026-01-14) - [Details](.claude/context-docs/refactors/component-consolidation.md)
+  Merged duplicate UI components and established shared design system
+- **State Management Cleanup** (2026-01-08) - [Details](.claude/context-docs/refactors/state-management.md)
+  Consolidated Redux stores and removed duplicate state management logic
+
+## Performance
+
+- **Bundle Size Optimization** (2026-01-28) - [Details](.claude/context-docs/performance/bundle-optimization.md)
+  Reduced bundle size by 40% through code splitting and lazy loading
+- **Database Query Optimization** (2026-01-23) - [Details](.claude/context-docs/performance/query-optimization.md)
+  Optimized N+1 queries and added database indexing reducing load time from 2.5s to 300ms
+
+## Security
+
+- **Input Validation** (2026-01-26) - [Details](.claude/context-docs/security/input-validation.md)
+  Implemented comprehensive input validation to prevent XSS and SQL injection attacks
+- **Rate Limiting** (2026-01-19) - [Details](.claude/context-docs/security/rate-limiting.md)
+  Implemented adaptive rate limiting with Redis to prevent API abuse and DDoS attacks

@@ -27,22 +27,22 @@ const projects = (await getCollection('work'))
 		<div class="wrapper stack gap-8 lg:gap-20">
 			<header class="hero">
 				<Hero
-					title="Hello, my name is Jeanine White"
-					tagline="I am a Creative Developer who is currently based in Portland, Oregon."
+					title="Hello, my name is Peter"
+					tagline="I am a DevOps Engineer specialized in Kubernetes, Automation, and Cloud Infrastructure."
 					align="start"
 				>
 					<div class="roles">
-						<Pill><Icon icon="code" size="1.33em" /> Developer</Pill>
-						<Pill><Icon icon="microphone-stage" size="1.33em" /> Speaker</Pill>
-						<Pill><Icon icon="pencil-line" size="1.33em" /> Writer</Pill>
+						<Pill><Icon icon="terminal-window" size="1.33em" /> DevOps</Pill>
+						<Pill><Icon icon="rocket-launch" size="1.33em" /> Automation</Pill>
+						<Pill><Icon icon="strategy" size="1.33em" /> Cloud</Pill>
 					</div>
 				</Hero>
 
 				<img
-					alt="Jeanine White smiling in a red plaid shirt and tortoise shell glasses"
+					alt="Peter, DevOps Engineer working in an isometric cloud interface"
 					width="480"
 					height="620"
-					src="/assets/portrait.jpg"
+					src="/assets/devops-portrait.png"
 				/>
 			</header>
 
@@ -238,6 +238,29 @@ const projects = (await getCollection('work'))
 		color: var(--gray-300);
 		background: var(--gradient-subtle);
 		box-shadow: var(--shadow-sm);
+		transition: transform var(--theme-transition), box-shadow var(--theme-transition), border-color var(--theme-transition), color var(--theme-transition);
+	}
+
+	.mention-card:hover {
+		transform: translateY(-5px) scale(1.02);
+		box-shadow: var(--shadow-lg);
+		color: var(--gray-100);
+		border-color: var(--accent-regular);
+		background: rgba(255, 255, 255, 0.05);
+	}
+
+	:global(.theme-dark) .mention-card {
+		background: rgba(0, 0, 0, 0.2);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+		border: 1px solid rgba(0, 240, 255, 0.1);
+	}
+
+	:global(.theme-dark) .mention-card:hover {
+		color: var(--accent-light);
+		border-color: rgba(0, 240, 255, 0.5);
+		background: rgba(0, 240, 255, 0.05);
+		box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
 	}
 
 	@media (min-width: 50em) {
