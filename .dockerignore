@@ -1,0 +1,10 @@
+node_modules
+dist
+.astro
+.git
+.gitignore
+*.md
+.vscode
+.idea
+.agents
+.ai-context
