@@ -1,30 +1,68 @@
-# Astro Starter Kit: Portfolio
+# Peter · DevOps Engineer Portfolio
 
-```sh
-npm create astro@latest -- --template portfolio
+A modern, static portfolio showcasing DevOps engineering capabilities, built with [Astro](https://astro.build).
+
+## Features
+
+- 🚀 Static Site Generation (SSG)
+- 🌙 Dark/Light theme toggle
+- 📱 Responsive design
+- ⚡ Optimized performance
+- 🎨 Custom CSS with design tokens
+
+## Tech Stack
+
+| Category | Technologies |
+|----------|-------------|
+| Framework | Astro 5.x |
+| Language | TypeScript |
+| Styling | CSS (Design Tokens, CSS Variables) |
+| Content | Astro Content Collections |
+| Deployment | Static hosting ready |
+
+## Projects Showcase
+
+- **Kubernetes Cluster** - High-availability cluster infrastructure
+- **Istio Ambient Mesh** - Service mesh implementation
+- **CI/CD Pipeline** - Automated deployment workflows
+- **Observability Stack** - Monitoring and logging infrastructure
+
+## Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/portfolio)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/portfolio)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/portfolio/devcontainer.json)
+## Project Structure
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+```
+src/
+├── components/     # Reusable UI components
+├── content/        # Markdown content (projects)
+├── layouts/        # Page layouts
+├── pages/          # Route pages
+└── styles/         # Global styles
+```
 
-![portfolio](https://user-images.githubusercontent.com/357379/210779178-a98f0fb7-6b1a-4068-894c-8e1403e26654.jpg)
+## Skills Highlighted
 
-## 🧞 Commands
+- **Container Orchestration:** Kubernetes, Docker
+- **Cloud Platforms:** AWS, Azure
+- **Infrastructure as Code:** Terraform, Ansible
+- **CI/CD:** Jenkins, GitHub Actions, ArgoCD
+- **Observability:** Prometheus, Grafana, ELK Stack
+- **Languages:** Python, Go, Bash
 
-All commands are run from the root of the project, from a terminal:
+---
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Built with ❤️ using [Astro](https://astro.build)
