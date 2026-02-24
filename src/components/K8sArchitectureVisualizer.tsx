@@ -187,27 +187,32 @@ export default function K8sArchitectureVisualizer() {
     if (!hasQuorum) return; // Scheduler cannot operate without Quorum
 
     const healthyWorkers = nodes.filter(n => n.role === 'worker' && n.status === 'Ready');
+    const hasUnscheduled = pods.some(p => !p.nodeId && p.status === 'Pending');
 
-    if (healthyWorkers.length > 0) {
-      setPods(currentPods => {
-        let changed = false;
-        const newPods = currentPods.map(pod => {
-          if (!pod.nodeId && pod.status === 'Pending') {
-            changed = true;
-            const targetNode = healthyWorkers[Math.floor(Math.random() * healthyWorkers.length)].id;
+    if (healthyWorkers.length > 0 && hasUnscheduled) {
+      const scheduleTimer = setTimeout(() => {
+        setPods(currentPods => {
+          let changed = false;
+          const newPods = currentPods.map(pod => {
+            if (!pod.nodeId && pod.status === 'Pending') {
+              changed = true;
+              const targetNode = healthyWorkers[Math.floor(Math.random() * healthyWorkers.length)].id;
 
-            // Kubelet will start the container shortly after scheduling
-            setTimeout(() => {
-              setPods(pds => pds.map(p => p.id === pod.id ? { ...p, status: 'Running' as const } : p));
-              setNodes(ns => ns.map(n => n.id === targetNode ? { ...n, usage: { cpu: Math.min(100, n.usage.cpu + 5), memory: Math.min(100, n.usage.memory + 8) } } : n));
-            }, 1000 + Math.random() * 1000);
+              // Kubelet will start the container shortly after scheduling
+              setTimeout(() => {
+                setPods(pds => pds.map(p => p.id === pod.id ? { ...p, status: 'Running' as const } : p));
+                setNodes(ns => ns.map(n => n.id === targetNode ? { ...n, usage: { cpu: Math.min(100, n.usage.cpu + 5), memory: Math.min(100, n.usage.memory + 8) } } : n));
+              }, 2000 + Math.random() * 2000);
 
-            return { ...pod, status: 'ContainerCreating' as const, nodeId: targetNode };
-          }
-          return pod;
+              return { ...pod, status: 'ContainerCreating' as const, nodeId: targetNode };
+            }
+            return pod;
+          });
+          return changed ? (newPods as Pod[]) : currentPods;
         });
-        return changed ? (newPods as Pod[]) : currentPods;
-      });
+      }, 2500); // 2.5 seconds queue latency before scheduling
+
+      return () => clearTimeout(scheduleTimer);
     }
   }, [nodes, pods, hasQuorum]);
 
