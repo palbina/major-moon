@@ -354,7 +354,7 @@ export default function ArgoRolloutsSimulator() {
       {/* Terminal Details */}
       <div style={{ background: '#0a0d12', borderRadius: '0.5rem', border: '1px solid #30363d', display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: '0.4rem 0.8rem', background: '#161b22', borderBottom: '1px solid #30363d', fontSize: '0.65rem', color: '#8b949e', borderTopLeftRadius: '0.5rem', borderTopRightRadius: '0.5rem', display: 'flex', justifyContent: 'space-between' }}>
-          <span>>_ {t.liveLogs}</span>
+          <span>&gt;_ {t.liveLogs}</span>
         </div>
         <div ref={logsRef} style={{ padding: '0.8rem', height: '100px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.65rem', color: '#34d399' }}>
           {logs.map((log, i) => (
