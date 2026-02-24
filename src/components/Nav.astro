@@ -2,22 +2,27 @@
 import Icon from './Icon.astro';
 import type { iconPaths } from './IconPaths';
 import ThemeToggle from './ThemeToggle.astro';
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
 
 /** Main menu items */
 const textLinks: { label: string; href: string }[] = [
-	{ label: 'Home', href: '/' },
-	{ label: 'Work', href: '/work/' },
-	{ label: 'About', href: '/about/' },
+	{ label: t('nav.home'), href: translatePath('/') },
+	{ label: t('nav.work'), href: translatePath('/work/') },
+	{ label: t('nav.about'), href: translatePath('/about/') },
 ];
 
 /** Icon links to social media — edit these with links to your profiles! */
 const iconLinks: { label: string; href: string; icon: keyof typeof iconPaths }[] = [
-	{ label: 'Twitter', href: 'https://twitter.com/me', icon: 'twitter-logo' },
-	{ label: 'Twitch', href: 'https://twitch.tv/me', icon: 'twitch-logo' },
-	{ label: 'GitHub', href: 'https://github.com/me', icon: 'github-logo' },
-	{ label: 'CodePen', href: 'https://codepen.io/me', icon: 'codepen-logo' },
-	{ label: 'dribbble', href: 'https://dribbble.com/me', icon: 'dribbble-logo' },
-	{ label: 'YouTube', href: 'https://www.youtube.com/@me/', icon: 'youtube-logo' },
+	{ label: t('nav.twitter'), href: 'https://twitter.com/me', icon: 'twitter-logo' },
+	{ label: t('nav.twitch'), href: 'https://twitch.tv/me', icon: 'twitch-logo' },
+	{ label: t('nav.github'), href: 'https://github.com/me', icon: 'github-logo' },
+	{ label: t('nav.codepen'), href: 'https://codepen.io/me', icon: 'codepen-logo' },
+	{ label: t('nav.dribbble'), href: 'https://dribbble.com/me', icon: 'dribbble-logo' },
+	{ label: t('nav.youtube'), href: 'https://www.youtube.com/@me/', icon: 'youtube-logo' },
 ];
 
 /** Test if a link is pointing to the current page. */
@@ -25,7 +30,8 @@ const isCurrentPage = (href: string) => {
 	let pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
 	if (pathname.at(0) !== '/') pathname = '/' + pathname;
 	if (pathname.at(-1) !== '/') pathname += '/';
-	return pathname === href || (href !== '/' && pathname.startsWith(href));
+	const homePath = translatePath('/');
+	return pathname === href || (href !== homePath && pathname.startsWith(href));
 };
 ---
 
@@ -96,6 +102,11 @@ const isCurrentPage = (href: string) => {
 			</div>
 
 			<div class="theme-toggle">
+				<div class="lang-switcher">
+					<a href={translatePath(Astro.url.pathname, 'en')} class={lang === 'en' ? 'active' : ''}>EN</a>
+					<span class="separator">|</span>
+					<a href={translatePath(Astro.url.pathname, 'es')} class={lang === 'es' ? 'active' : ''}>ES</a>
+				</div>
 				<ThemeToggle />
 			</div>
 		</div>
@@ -137,15 +148,54 @@ const isCurrentPage = (href: string) => {
 		}
 	}
 	customElements.define('menu-button', MenuButton);
+
+	// Smart sticky header behavior: hide on scroll down, show on scroll up
+	let lastScroll = 0;
+	const nav = document.querySelector('nav');
+	
+	window.addEventListener('scroll', () => {
+		if (!nav) return;
+		
+		const currentScroll = window.scrollY;
+		
+		// Always show at the very top (within first 100px)
+		if (currentScroll <= 100) {
+			nav.classList.remove('nav-hidden');
+			return;
+		}
+		
+		if (currentScroll > lastScroll && !nav.classList.contains('nav-hidden')) {
+			// Scrolling down -> hide
+			nav.classList.add('nav-hidden');
+		} else if (currentScroll < lastScroll && nav.classList.contains('nav-hidden')) {
+			// Scrolling up -> show
+			nav.classList.remove('nav-hidden');
+		}
+		
+		lastScroll = currentScroll;
+	}, { passive: true });
 </script>
 
 <style>
 	nav {
 		z-index: 9999;
-		position: relative;
+		position: sticky;
+		top: 0;
 		font-family: var(--font-brand);
 		font-weight: 500;
 		margin-bottom: 3.5rem;
+		/* Base glassmorphism */
+		background: rgba(var(--gray-999-basis), 0.7);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		border-bottom: 1px solid var(--gray-800);
+		
+		/* Smooth transition for hiding/showing */
+		transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	nav.nav-hidden {
+		transform: translateY(-150%);
 	}
 
 	.menu-header {
@@ -261,7 +311,35 @@ const isCurrentPage = (href: string) => {
 	.theme-toggle {
 		display: flex;
 		align-items: center;
+		gap: 1.5rem;
 		height: calc(var(--icon-size) + 2 * var(--icon-padding));
+	}
+
+	.lang-switcher {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: var(--text-sm);
+	}
+
+	.lang-switcher a {
+		color: var(--gray-400);
+		text-decoration: none;
+		transition: color var(--theme-transition);
+	}
+
+	.lang-switcher a:hover {
+		color: var(--gray-100);
+	}
+
+	.lang-switcher a.active {
+		color: var(--gray-0);
+		font-weight: 700;
+	}
+
+	.lang-switcher .separator {
+		color: var(--gray-600);
+		user-select: none;
 	}
 
 	@media (min-width: 50em) {
@@ -269,8 +347,18 @@ const isCurrentPage = (href: string) => {
 			display: grid;
 			grid-template-columns: 1fr auto 1fr;
 			align-items: center;
-			padding: 2.5rem 5rem;
+			padding: 0.8rem 2.5rem;
 			gap: 1rem;
+			/* Modern Floating Glassmorphism Navbar */
+			top: 1.5rem;
+			width: calc(100% - 3rem);
+			max-width: 1200px;
+			margin: 0 auto 3.5rem auto;
+			border-radius: 999rem;
+			border: 1px solid var(--gray-800);
+			border-top: 1px solid rgba(255, 255, 255, 0.1);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+			box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 		}
 
 		.menu-header {
@@ -291,26 +379,20 @@ const isCurrentPage = (href: string) => {
 			font-size: var(--text-sm);
 			border-radius: 999rem;
 			border: 0;
-			padding: 0.5rem 0.5625rem;
-			background: radial-gradient(var(--gray-900), var(--gray-800) 150%);
-			box-shadow: var(--shadow-md);
+			padding: 0.5rem;
+			/* Blend smoothly with the new glass nav */
+			background: transparent;
+			box-shadow: none;
 		}
 
 		.nav-items::before {
-			position: absolute;
-			inset: -1px;
-			content: '';
-			background: var(--gradient-stroke);
-			border-radius: 999rem;
-			z-index: -1;
+			display: none;
 		}
 
 		.link {
 			padding: 0.5rem 1rem;
 			border-radius: 999rem;
-			transition:
-				color var(--theme-transition),
-				background-color var(--theme-transition);
+			transition: color 200ms ease, background-color 200ms ease;
 		}
 
 		.link:hover,

@@ -1,21 +1,21 @@
 ---
 import { getCollection } from 'astro:content';
 // Component Imports
-import CallToAction from '../components/CallToAction.astro';
+import CallToAction from '../../components/CallToAction.astro';
 // Page section components
-import ContactCTA from '../components/ContactCTA.astro';
-import Grid from '../components/Grid.astro';
-import Hero from '../components/Hero.astro';
-import Icon from '../components/Icon.astro';
-import Pill from '../components/Pill.astro';
-import PortfolioPreview from '../components/PortfolioPreview.astro';
-import Skills from '../components/Skills.astro';
+import ContactCTA from '../../components/ContactCTA.astro';
+import Grid from '../../components/Grid.astro';
+import Hero from '../../components/Hero.astro';
+import Icon from '../../components/Icon.astro';
+import Pill from '../../components/Pill.astro';
+import PortfolioPreview from '../../components/PortfolioPreview.astro';
+import Skills from '../../components/Skills.astro';
 // Layout import — provides basic page elements: <head>, <nav>, <footer> etc.
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 
 // Content Fetching: List four most recent work projects
 const projects = (await getCollection('work'))
-	.filter((project) => project.id.startsWith('en/'))
+	.filter((project) => project.id.startsWith('es/'))
 	.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
 	.slice(0, 4);
 
@@ -28,19 +28,19 @@ const projects = (await getCollection('work'))
 		<div class="wrapper stack gap-8 lg:gap-20">
 			<header class="hero">
 				<Hero
-					title="Hello, my name is Peter"
-					tagline="I am a DevOps Engineer specialized in Kubernetes, Automation, and Cloud Infrastructure."
+					title="Hola, mi nombre es Peter"
+					tagline="Soy un Ingeniero DevOps especializado en Kubernetes, Automatización e Infraestructura Cloud."
 					align="start"
 				>
 					<div class="roles">
 						<Pill><Icon icon="terminal-window" size="1.33em" /> DevOps</Pill>
-						<Pill><Icon icon="rocket-launch" size="1.33em" /> Automation</Pill>
+						<Pill><Icon icon="rocket-launch" size="1.33em" /> Automatización</Pill>
 						<Pill><Icon icon="strategy" size="1.33em" /> Cloud</Pill>
 					</div>
 				</Hero>
 
 				<img
-					alt="Peter, DevOps Engineer working in an isometric cloud interface"
+					alt="Peter, Ingeniero DevOps trabajando en una interfaz cloud isométrica"
 					width="480"
 					height="620"
 					src="/assets/devops-portrait.png"
@@ -53,8 +53,8 @@ const projects = (await getCollection('work'))
 		<main class="wrapper stack gap-20 lg:gap-48">
 			<section class="section with-background with-cta">
 				<header class="section-header stack gap-2 lg:gap-4">
-					<h3>Selected Work</h3>
-					<p>Take a look below at some of my featured work for clients from the past few years.</p>
+					<h3>Proyectos Destacados</h3>
+					<p>Echa un vistazo a algunos de mis proyectos más recientes.</p>
 				</header>
 
 				<div class="gallery">
@@ -70,8 +70,8 @@ const projects = (await getCollection('work'))
 				</div>
 
 				<div class="cta">
-					<CallToAction href="/work/">
-						View All
+					<CallToAction href="/es/work/">
+						Ver Todos
 						<Icon icon="arrow-right" size="1.2em" />
 					</CallToAction>
 				</div>
@@ -79,10 +79,9 @@ const projects = (await getCollection('work'))
 
 			<section class="section with-background bg-variant">
 				<header class="section-header stack gap-2 lg:gap-4">
-					<h3>Mentions</h3>
+					<h3>Menciones</h3>
 					<p>
-						I have been fortunate enough to receive praise for my work in several publications. Take
-						a look below to learn more.
+						He tenido la suerte de recibir elogios por mi trabajo en varias publicaciones. Echa un vistazo a continuación para saber más.
 					</p>
 				</header>
 

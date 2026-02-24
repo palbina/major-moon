@@ -1,11 +1,11 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 
-import ContactCTA from '../../components/ContactCTA.astro';
-import Hero from '../../components/Hero.astro';
-import Icon from '../../components/Icon.astro';
-import Pill from '../../components/Pill.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContactCTA from '../../../components/ContactCTA.astro';
+import Hero from '../../../components/Hero.astro';
+import Icon from '../../../components/Icon.astro';
+import Pill from '../../../components/Pill.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 
 interface Props {
 	entry: CollectionEntry<'work'>;
@@ -16,9 +16,9 @@ interface Props {
 // https://docs.astro.build/en/guides/routing/#dynamic-routes
 export async function getStaticPaths() {
 	const work = await getCollection('work');
-	const englishWork = work.filter(entry => entry.id.startsWith('en/'));
-	return englishWork.map((entry) => ({
-		params: { slug: entry.id.replace('en/', '') },
+	const spanishWork = work.filter(entry => entry.id.startsWith('es/'));
+	return spanishWork.map((entry) => ({
+		params: { slug: entry.id.replace('es/', '') },
 		props: { entry },
 	}));
 }
@@ -32,7 +32,7 @@ const { Content } = await render(entry);
 		<div class="stack gap-15">
 			<header>
 				<div class="wrapper stack gap-2">
-					<a class="back-link" href="/work/"><Icon icon="arrow-left" /> Work</a>
+					<a class="back-link" href="/es/work/"><Icon icon="arrow-left" /> Proyectos</a>
 					<Hero title={entry.data.title} align="start">
 						<div class="details">
 							<div class="tags">

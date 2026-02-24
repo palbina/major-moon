@@ -1,0 +1,109 @@
+---
+import ContactCTA from '../../components/ContactCTA.astro';
+import Hero from '../../components/Hero.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Sobre mí | Peter" description="La trayectoria de Peter como DevOps">
+	<div class="stack gap-20">
+		<main class="wrapper about">
+			<Hero
+				title="Sobre mí"
+				tagline="Gracias por pasarte. Lee a continuación para saber más sobre mi trayectoria como Ingeniero DevOps."
+			>
+				<img
+					width="1553"
+					height="873"
+					src="/assets/at-work-devops.png"
+					alt="La Infraestructura DevOps de Peter"
+				/>
+			</Hero>
+
+			<section>
+				<h2 class="section-title">Experiencia</h2>
+				<div class="content">
+					<p>
+						Soy un Ingeniero DevOps apasionado con sólidos conocimientos en administración Linux, Cloud Computing y Orquestación de Contenedores.
+						Mi enfoque es construir infraestructura escalable, confiable y segura usando prácticas modernas como GitOps e Infraestructura como Código.
+					</p>
+					<p>
+						Tengo amplia experiencia con Kubernetes, manteniendo clústers de alta disponibilidad e implementando flujos de integración y entrega continua automatizados.
+						Disfruto resolviendo retos complejos de infraestructura y optimizando el rendimiento de sistemas.
+					</p>
+				</div>
+			</section>
+			<section>
+				<h2 class="section-title">Educación</h2>
+				<div class="content">
+					<p>Ingeniería Informática, con especialización en Ingeniería de Sistemas.</p>
+				</div>
+			</section>
+			<section>
+				<h2 class="section-title">Habilidades</h2>
+				<div class="content">
+					<p>Kubernetes, Docker, Linux, Ansible, Terraform, AWS, Azure, CI/CD (Jenkins, GitHub Actions, ArgoCD), Python, Go, Bash.</p>
+				</div>
+			</section>
+		</main>
+
+		<ContactCTA />
+	</div>
+</BaseLayout>
+
+<style>
+	.about {
+		display: flex;
+		flex-direction: column;
+		gap: 3.5rem;
+	}
+
+	img {
+		margin-top: 1.5rem;
+		border-radius: 1.5rem;
+		box-shadow: var(--shadow-md);
+	}
+
+	section {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		color: var(--gray-200);
+	}
+
+	.section-title {
+		grid-column-start: 1;
+		font-size: var(--text-xl);
+		color: var(--gray-0);
+	}
+
+	.content {
+		grid-column: 2 / 4;
+	}
+
+	.content :global(a) {
+		text-decoration: 1px solid underline transparent;
+		text-underline-offset: 0.25em;
+		transition: text-decoration-color var(--theme-transition);
+	}
+
+	.content :global(a:hover),
+	.content :global(a:focus) {
+		text-decoration-color: currentColor;
+	}
+
+	@media (min-width: 50em) {
+		.about {
+			display: grid;
+			grid-template-columns: 1fr 60% 1fr;
+		}
+
+		.about > :global(:first-child) {
+			grid-column-start: 2;
+		}
+
+		section {
+			display: contents;
+			font-size: var(--text-lg);
+		}
+	}
+</style>

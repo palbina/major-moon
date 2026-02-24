@@ -1,14 +1,19 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
 
 interface Props {
 	project: CollectionEntry<'work'>;
 }
 
 const { data, id } = Astro.props.project;
+const lang = getLangFromUrl(Astro.url);
+const translatePath = useTranslatedPath(lang);
+// Extract unlocalized slug from id (e.g. "en/kube" -> "kube")
+const unlocalizedSlug = id.split('/')[1];
 ---
 
-<a class="card" href={`/work/${id}`}>
+<a class="card" href={translatePath(`/work/${unlocalizedSlug}`)}>
 	<span class="title">{data.title}</span>
 	<img src={data.img} alt={data.img_alt || ''} loading="lazy" decoding="async" />
 </a>
