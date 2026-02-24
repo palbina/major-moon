@@ -22,9 +22,12 @@ const lang = getLangFromUrl(Astro.url);
 		<MainHead title={title} description={description} />
 	</head>
 	<body>
+		<a href="#main-content" class="skip-link">Skip to main content</a>
 		<div class="stack backgrounds">
 			<Nav />
-			<slot />
+			<div id="main-content" style="display: contents;">
+				<slot />
+			</div>
 			<Footer />
 		</div>
 
@@ -54,6 +57,7 @@ const lang = getLangFromUrl(Astro.url);
 				--bg-image-main-curves: url('/assets/backgrounds/bg-main-dark.svg');
 				--bg-svg-blend-mode: darken;
 				--bg-blend-mode: lighten;
+				color-scheme: dark;
 			}
 
 			/* These backgrounds are displayed below the fold, so we lazy load them
@@ -114,6 +118,23 @@ const lang = getLangFromUrl(Astro.url);
 					background-blend-mode: none;
 					--bg-gradient-size: none;
 				}
+			}
+
+			.skip-link {
+				position: absolute;
+				top: -999px;
+				left: 0;
+				background: var(--accent-regular);
+				color: var(--gray-0);
+				padding: 1rem;
+				z-index: 999999;
+				text-decoration: none;
+				border-radius: 0 0 1rem 0;
+				font-weight: bold;
+			}
+
+			.skip-link:focus {
+				top: 0;
 			}
 		</style>
 	</body>

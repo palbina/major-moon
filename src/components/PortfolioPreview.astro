@@ -15,7 +15,7 @@ const unlocalizedSlug = id.split('/')[1];
 
 <a class="card" href={translatePath(`/work/${unlocalizedSlug}`)}>
 	<span class="title">{data.title}</span>
-	<img src={data.img} alt={data.img_alt || ''} loading="lazy" decoding="async" />
+	<img src={data.img} alt={data.img_alt || ''} loading="lazy" decoding="async" width="800" height="800" />
 </a>
 
 <style>
@@ -86,6 +86,22 @@ const unlocalizedSlug = id.split('/')[1];
 
 		.title {
 			border-radius: 0.9375rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.card,
+		.title,
+		img {
+			transition: none;
+		}
+		
+		.card:hover {
+			transform: none;
+		}
+		
+		.card:hover img {
+			transform: none;
 		}
 	}
 </style>

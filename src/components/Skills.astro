@@ -29,8 +29,16 @@ const t = useTranslations(lang);
 		border: 1px solid var(--gray-800);
 		border-radius: 0.75rem;
 		padding: 1.5rem;
-		background-color: var(--gray-999_40);
+		background-color: rgba(var(--gray-999-basis), 0.4);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
 		box-shadow: var(--shadow-sm);
+		transition: box-shadow var(--theme-transition), transform var(--theme-transition);
+	}
+
+	.box:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-lg);
 	}
 
 	.skills {
