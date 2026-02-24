@@ -2,6 +2,7 @@
 import Icon from './Icon.astro';
 import type { iconPaths } from './IconPaths';
 import ThemeToggle from './ThemeToggle.astro';
+import LangToggle from './LangToggle';
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
@@ -102,11 +103,7 @@ const isCurrentPage = (href: string) => {
 			</div>
 
 			<div class="theme-toggle">
-				<div class="lang-switcher">
-					<a href={translatePath(Astro.url.pathname, 'en')} class={lang === 'en' ? 'active' : ''}>EN</a>
-					<span class="separator">|</span>
-					<a href={translatePath(Astro.url.pathname, 'es')} class={lang === 'es' ? 'active' : ''}>ES</a>
-				</div>
+				<LangToggle client:load />
 				<ThemeToggle />
 			</div>
 		</div>
@@ -315,31 +312,25 @@ const isCurrentPage = (href: string) => {
 		height: calc(var(--icon-size) + 2 * var(--icon-padding));
 	}
 
-	.lang-switcher {
+	.lang-toggle {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		justify-content: center;
+		padding: 0.375rem 0.75rem;
 		font-size: var(--text-sm);
-	}
-
-	.lang-switcher a {
+		font-weight: 600;
 		color: var(--gray-400);
-		text-decoration: none;
-		transition: color var(--theme-transition);
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid var(--gray-700);
+		border-radius: 999rem;
+		cursor: pointer;
+		transition: all var(--theme-transition);
 	}
 
-	.lang-switcher a:hover {
+	.lang-toggle:hover {
 		color: var(--gray-100);
-	}
-
-	.lang-switcher a.active {
-		color: var(--gray-0);
-		font-weight: 700;
-	}
-
-	.lang-switcher .separator {
-		color: var(--gray-600);
-		user-select: none;
+		background: rgba(255, 255, 255, 0.1);
+		border-color: var(--gray-600);
 	}
 
 	@media (min-width: 50em) {

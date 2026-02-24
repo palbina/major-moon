@@ -1,12 +1,16 @@
 import { useState } from 'preact/hooks';
+import { useStore } from '@nanostores/preact';
+import { currentLocale, getTranslations } from '../store/languageStore';
 
 export default function Counter() {
     const [count, setCount] = useState(0);
+    const locale = useStore(currentLocale);
+    const t = getTranslations(locale);
 
     return (
         <div style={{ padding: '1.5rem', border: '1px solid var(--gray-800)', borderRadius: '1.5rem', textAlign: 'center', marginTop: '2rem', background: 'var(--gradient-subtle)', boxShadow: 'var(--shadow-sm)' }}>
-            <h3 style={{ marginBottom: '1rem', fontSize: 'var(--text-xl)', color: 'var(--gray-100)' }}>Interactive Preact Island</h3>
-            <p style={{ marginBottom: '1.5rem', color: 'var(--gray-300)' }}>Current count: <strong>{count}</strong></p>
+            <h3 style={{ marginBottom: '1rem', fontSize: 'var(--text-xl)', color: 'var(--gray-100)' }}>{t.title}</h3>
+            <p style={{ marginBottom: '1.5rem', color: 'var(--gray-300)' }}>{t.currentCount} <strong>{count}</strong></p>
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
                 <button
                     onClick={() => setCount(count - 1)}

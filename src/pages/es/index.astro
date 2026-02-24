@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 // Component Imports
 import CallToAction from '../../components/CallToAction.astro';
+import Terminal from '../../components/Terminal';
 // Page section components
 import ContactCTA from '../../components/ContactCTA.astro';
 import Grid from '../../components/Grid.astro';
@@ -37,6 +38,7 @@ const projects = (await getCollection('work'))
 						<Pill><Icon icon="rocket-launch" size="1.33em" /> Automatización</Pill>
 						<Pill><Icon icon="strategy" size="1.33em" /> Cloud</Pill>
 					</div>
+					<Terminal client:idle />
 				</Hero>
 
 				<img
