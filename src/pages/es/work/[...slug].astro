@@ -9,6 +9,10 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 
 import ArgoRolloutsSimulator from '../../../components/ArgoRolloutsSimulator';
 import GitOpsFlow from '../../../components/GitOpsFlow';
+import K8sArchitectureVisualizer from '../../../components/K8sArchitectureVisualizer';
+import PodLifecycleSimulator from '../../../components/PodLifecycleSimulator';
+import ServiceMeshVisualizer from '../../../components/ServiceMeshVisualizer';
+import MetricsDashboardSimulator from '../../../components/MetricsDashboardSimulator';
 
 interface Props {
 	entry: CollectionEntry<'work'>;
@@ -62,6 +66,42 @@ const { Content } = await render(entry);
 								</div>
 								<div class="island-card">
 									<GitOpsFlow client:visible />
+								</div>
+							</div>
+						</div>
+					)}
+
+					{(entry.id === 'en/kubernetes-cluster' || entry.id === 'es/kubernetes-cluster') && (
+						<div class="islands-demo">
+							<h3>Demos Interactivos</h3>
+							<div class="islands-grid">
+								<div class="island-card">
+									<K8sArchitectureVisualizer client:visible />
+								</div>
+								<div class="island-card">
+									<PodLifecycleSimulator client:visible />
+								</div>
+							</div>
+						</div>
+					)}
+
+					{(entry.id === 'en/istio-ambient-mesh' || entry.id === 'es/istio-ambient-mesh') && (
+						<div class="islands-demo">
+							<h3>Demos Interactivos</h3>
+							<div class="islands-grid">
+								<div class="island-card">
+									<ServiceMeshVisualizer client:visible />
+								</div>
+							</div>
+						</div>
+					)}
+
+					{(entry.id === 'en/observability-stack' || entry.id === 'es/observability-stack') && (
+						<div class="islands-demo">
+							<h3>Demos Interactivos</h3>
+							<div class="islands-grid">
+								<div class="island-card">
+									<MetricsDashboardSimulator client:visible />
 								</div>
 							</div>
 						</div>
@@ -187,10 +227,20 @@ const { Content } = await render(entry);
 	}
 
 	.island-card {
-		background: var(--gradient-subtle);
-		border-radius: 1rem;
-		padding: 1rem;
-		border: 1px solid var(--gray-800);
+		background: rgba(255, 255, 255, 0.03);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border-radius: 1.5rem;
+		padding: 1.5rem;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	.island-card:hover {
+		transform: translateY(-2px);
+		border-color: rgba(255, 255, 255, 0.2);
+		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 	}
 
 	@media (min-width: 64em) {
