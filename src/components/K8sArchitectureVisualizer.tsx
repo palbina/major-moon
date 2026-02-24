@@ -10,7 +10,7 @@ interface Res {
 interface Pod {
   id: string;
   name: string;
-  status: 'Pending' | 'ContainerCreating' | 'Running' | 'Terminating';
+  status: 'Pending' | 'ContainerCreating' | 'Running' | 'Terminating' | 'Unknown';
   nodeId?: string;
 }
 
@@ -41,6 +41,10 @@ const translations = {
     cp: 'Control Plane',
     worker: 'Worker',
     os: 'OS',
+    apiUnavailable: 'API Server Unavailable (No Quorum)',
+    talosDisclaimer: 'talosctl active (via port 50000). System recovery requires restoring etcd from backup.',
+    lossOfQuorum: 'LOSS OF QUORUM',
+    unscheduled: 'Unscheduled Pods ⚠'
   },
   es: {
     title: 'Clúster Kubernetes con Talos Linux',
@@ -58,6 +62,10 @@ const translations = {
     cp: 'Control Plane',
     worker: 'Worker',
     os: 'SO',
+    apiUnavailable: 'API Server No Disponible (Sin Quórum)',
+    talosDisclaimer: 'talosctl activo (vía puerto 50000). La recuperación requiere restaurar etcd desde el backup.',
+    lossOfQuorum: 'PÉRDIDA DE QUÓRUM',
+    unscheduled: 'Pods Sin Asignar ⚠'
   },
 };
 
@@ -80,6 +88,12 @@ export default function K8sArchitectureVisualizer() {
   ]);
   const [isSimulating, setIsSimulating] = useState(false);
 
+  // Quorum Calculation
+  const controlPlaneNodes = nodes.filter(n => n.role === 'control-plane');
+  const readyCPNodes = controlPlaneNodes.filter(n => n.status === 'Ready');
+  const minQuorum = Math.floor(controlPlaneNodes.length / 2) + 1;
+  const hasQuorum = readyCPNodes.length >= minQuorum;
+
   // Dynamic status colors
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -88,7 +102,8 @@ export default function K8sArchitectureVisualizer() {
       case 'Pending':
       case 'ContainerCreating': return '#f59e0b'; // amber
       case 'NotReady':
-      case 'Terminating': return '#ef4444'; // red
+      case 'Terminating':
+      case 'Unknown': return '#ef4444'; // red
       default: return '#6b7280';
     }
   };
@@ -100,6 +115,13 @@ export default function K8sArchitectureVisualizer() {
   // Actions
   const deployApp = () => {
     if (isSimulating) return;
+
+    // API Server check
+    if (!hasQuorum) {
+      alert(t.apiUnavailable);
+      return;
+    }
+
     setIsSimulating(true);
 
     const newPodId = `p${Date.now()}`;
@@ -119,24 +141,37 @@ export default function K8sArchitectureVisualizer() {
     const isFailing = node.status === 'Ready';
 
     if (isFailing) {
+      // Node fails
       setNodes(ns => ns.map(n => n.id === nodeId ? { ...n, status: 'NotReady', usage: { cpu: 0, memory: 0 } } : n));
 
-      // Re-schedule pods from this node
-      const affectedPods = pods.filter(p => p.nodeId === nodeId);
-      if (affectedPods.length > 0) {
-        setPods(ps => ps.map(p => p.nodeId === nodeId ? { ...p, status: 'Terminating' } : p));
+      if (node.role === 'worker') {
+        const affectedPods = pods.filter(p => p.nodeId === nodeId);
 
-        setTimeout(() => {
-          setPods(ps => ps.filter(p => p.nodeId !== nodeId)); // Remove terminated
-          affectedPods.forEach(p => deployReplica(p.name)); // Recreate
+        if (affectedPods.length > 0) {
+          if (hasQuorum) {
+            // API Server is up, can reschedule pods
+            setPods(ps => ps.map(p => p.nodeId === nodeId ? { ...p, status: 'Terminating' } : p));
+            setTimeout(() => {
+              setPods(ps => ps.filter(p => p.nodeId !== nodeId)); // Remove terminated
+              affectedPods.forEach(p => deployReplica(p.name)); // Recreate
+              setIsSimulating(false);
+            }, 1000);
+          } else {
+            // No Quorum: Kubelet dies, pods die, but API server can't reschedule them.
+            // In reality, API server might mark them as Terminating or Unknown later, and they are not rescheduled.
+            setPods(ps => ps.map(p => p.nodeId === nodeId ? { ...p, status: 'Unknown' } : p));
+            setIsSimulating(false);
+          }
+        } else {
           setIsSimulating(false);
-        }, 1500);
+        }
       } else {
+        // Control Plane failed
         setIsSimulating(false);
       }
     } else {
       // Recover node
-      setNodes(ns => ns.map(n => n.id === nodeId ? { ...n, status: 'Ready', usage: { cpu: 10, memory: 15 } } : n));
+      setNodes(ns => ns.map(n => n.id === nodeId ? { ...n, status: 'Ready', usage: { cpu: node.role === 'worker' ? 10 : 15, memory: node.role === 'worker' ? 15 : 25 } } : n));
       setIsSimulating(false);
     }
   };
@@ -149,10 +184,11 @@ export default function K8sArchitectureVisualizer() {
 
   // Kube-Scheduler Simulation
   useEffect(() => {
-    const hasCP = nodes.some(n => n.role === 'control-plane' && n.status === 'Ready');
+    if (!hasQuorum) return; // Scheduler cannot operate without Quorum
+
     const healthyWorkers = nodes.filter(n => n.role === 'worker' && n.status === 'Ready');
 
-    if (hasCP && healthyWorkers.length > 0) {
+    if (healthyWorkers.length > 0) {
       setPods(currentPods => {
         let changed = false;
         const newPods = currentPods.map(pod => {
@@ -173,19 +209,20 @@ export default function K8sArchitectureVisualizer() {
         return changed ? (newPods as Pod[]) : currentPods;
       });
     }
-  }, [nodes, pods]);
+  }, [nodes, pods, hasQuorum]);
 
   return (
     <div style={{
       background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)',
       borderRadius: '1rem',
       padding: '1.5rem',
-      border: '1px solid #30363d',
+      border: `1px solid ${hasQuorum ? '#30363d' : '#ef4444'}`,
       fontFamily: "'JetBrains Mono', monospace",
       fontSize: '0.75rem',
       position: 'relative',
       minWidth: '450px',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      transition: 'border-color 0.3s ease'
     }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
@@ -195,20 +232,34 @@ export default function K8sArchitectureVisualizer() {
           </div>
           <div style={{ color: '#8b949e', fontSize: '0.65rem', marginTop: '0.2rem' }}>{t.desc}</div>
         </div>
+        {!hasQuorum && (
+          <div style={{
+            padding: '0.3rem 0.6rem',
+            background: 'rgba(239, 68, 68, 0.2)',
+            border: '1px solid #ef4444',
+            borderRadius: '0.5rem',
+            color: '#fca5a5',
+            fontSize: '0.65rem',
+            fontWeight: 'bold',
+            animation: 'pulse 2s infinite'
+          }}>
+            {t.lossOfQuorum}
+          </div>
+        )}
       </div>
 
       <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem' }}>
         <button
           onClick={deployApp}
-          disabled={isSimulating}
+          disabled={isSimulating || !hasQuorum}
           style={{
             flex: 1,
             padding: '0.6rem',
-            background: isSimulating ? '#374151' : '#238636',
-            color: '#fff',
+            background: isSimulating || !hasQuorum ? '#374151' : '#238636',
+            color: !hasQuorum ? '#9ca3af' : '#fff',
             border: 'none',
             borderRadius: '0.5rem',
-            cursor: isSimulating ? 'not-allowed' : 'pointer',
+            cursor: isSimulating || !hasQuorum ? 'not-allowed' : 'pointer',
             fontSize: '0.75rem',
             fontWeight: 'bold',
             display: 'flex',
@@ -222,11 +273,30 @@ export default function K8sArchitectureVisualizer() {
         </button>
       </div>
 
+      {!hasQuorum && (
+        <div style={{
+          marginBottom: '1.5rem',
+          padding: '0.75rem',
+          background: 'rgba(239, 68, 68, 0.1)',
+          borderLeft: '4px solid #ef4444',
+          borderRadius: '0 0.5rem 0.5rem 0',
+          color: '#fca5a5',
+          fontSize: '0.65rem',
+          lineHeight: '1.4'
+        }}>
+          <strong>{t.apiUnavailable}</strong><br />
+          {t.talosDisclaimer}
+        </div>
+      )}
+
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Control Plane Group */}
         <div>
-          <div style={{ color: '#8b5cf6', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            {t.cp}
+          <div style={{ color: '#8b5cf6', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', justifyContent: 'space-between' }}>
+            <span>{t.cp}</span>
+            <span style={{ color: hasQuorum ? '#10b981' : '#ef4444' }}>
+              Quorum: {readyCPNodes.length}/{controlPlaneNodes.length} (Min: {minQuorum})
+            </span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
             {nodes.filter(n => n.role === 'control-plane').map(node => (
@@ -250,11 +320,11 @@ export default function K8sArchitectureVisualizer() {
         {/* Unscheduled / Pending Pods */}
         {pods.filter(p => !p.nodeId).length > 0 && (
           <div style={{ padding: '0.75rem', background: '#3b2313', border: '1px dashed #f59e0b', borderRadius: '0.5rem' }}>
-            <div style={{ color: '#f59e0b', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '0.65rem' }}>Unscheduled Pods ⚠</div>
+            <div style={{ color: '#f59e0b', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '0.65rem' }}>{t.unscheduled}</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
               {pods.filter(p => !p.nodeId).map(pod => (
                 <div key={pod.id} style={{ padding: '0.25rem 0.5rem', background: '#0a0d12', border: `1px solid ${getStatusColor(pod.status)}`, borderRadius: '0.25rem', fontSize: '0.6rem', color: '#c9d1d9', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: getStatusColor(pod.status), animation: pod.status !== 'Pending' ? 'pulse 1s infinite' : 'none' }} />
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: getStatusColor(pod.status), animation: pod.status === 'Pending' && hasQuorum ? 'pulse 1s infinite' : 'none' }} />
                   {pod.name}
                 </div>
               ))}
@@ -294,7 +364,7 @@ function NodeCard({ node, pods, t, onToggle, getStatusColor, getRoleColor }: { n
             <span style={{ color: '#fff', fontWeight: 'bold', fontSize: '0.7rem' }}>{node.name}</span>
           </div>
           <div style={{ fontSize: '0.55rem', color: '#8b949e', display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
-            <span style={{ background: '#1c2128', padding: '1px 4px', borderRadius: '2px' }}>{node.os}</span>
+            <span style={{ background: '#1c2128', padding: '1px 4px', borderRadius: '2px', border: '1px solid #30363d' }}>{node.os}</span>
           </div>
         </div>
         <button
@@ -348,7 +418,7 @@ function NodeCard({ node, pods, t, onToggle, getStatusColor, getRoleColor }: { n
                   border: `1px solid ${getStatusColor(pod.status)}40`,
                   borderRadius: '3px',
                   fontSize: '0.55rem',
-                  color: '#c9d1d9',
+                  color: pod.status === 'Unknown' ? '#fca5a5' : '#c9d1d9',
                   maxWidth: '70px',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
