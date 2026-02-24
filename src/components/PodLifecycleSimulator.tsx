@@ -79,7 +79,7 @@ export default function PodLifecycleSimulator() {
 
   const deletePod = () => {
     if (!pod || pod.phase === 'terminating' || pod.phase === 'succeeded') return;
-    
+
     setPod(p => p ? { ...p, phase: 'terminating' } : p);
     addEvent(locale === 'en' ? 'Grace period started (30s)' : 'Período de gracia iniciado (30s)');
 
@@ -111,13 +111,14 @@ export default function PodLifecycleSimulator() {
   const phaseProgress = pod ? (phaseOrder.indexOf(pod.phase) / (phaseOrder.length - 1)) * 100 : 0;
 
   return (
-    <div style={{ 
-      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)', 
-      borderRadius: '1rem', 
+    <div style={{
+      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)',
+      borderRadius: '1rem',
       padding: '1.5rem',
       border: '1px solid #30363d',
       fontFamily: "'JetBrains Mono', monospace",
-      fontSize: '0.75rem'
+      fontSize: '0.75rem',
+      minWidth: '450px'
     }}>
       <div style={{ color: '#58a6ff', fontWeight: 'bold', marginBottom: '1rem' }}>{t.title}</div>
 
@@ -129,8 +130,8 @@ export default function PodLifecycleSimulator() {
           </span>
         </div>
         <div style={{ height: '8px', background: '#21262d', borderRadius: '4px', overflow: 'hidden' }}>
-          <div style={{ 
-            width: `${phaseProgress}%`, 
+          <div style={{
+            width: `${phaseProgress}%`,
             height: '100%',
             background: 'linear-gradient(90deg, #3b82f6, #10b981)',
             transition: 'width 0.5s ease'
@@ -143,9 +144,9 @@ export default function PodLifecycleSimulator() {
         </div>
       </div>
 
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
         marginBottom: '1rem',
         padding: '1.5rem',
         background: '#0d1117',
@@ -162,8 +163,8 @@ export default function PodLifecycleSimulator() {
             alignItems: 'center',
             justifyContent: 'center',
             boxShadow: pod.phase === 'running' ? `0 0 20px ${getPhaseColor(pod.phase)}` : 'none',
-            animation: pod.phase === 'containerCreating' ? 'spin 2s linear infinite' : 
-                      pod.phase === 'terminating' ? 'pulse 1s infinite' : 'none'
+            animation: pod.phase === 'containerCreating' ? 'spin 2s linear infinite' :
+              pod.phase === 'terminating' ? 'pulse 1s infinite' : 'none'
           }}>
             <span style={{ color: '#fff', fontWeight: 'bold', fontSize: '0.7rem' }}>POD</span>
             <span style={{ color: '#fff', fontSize: '0.5rem', opacity: 0.8 }}>{pod.phase}</span>
@@ -180,11 +181,11 @@ export default function PodLifecycleSimulator() {
           <div style={{ color: '#9ca3af', fontSize: '0.65rem', marginBottom: '0.5rem' }}>{t.containers}</div>
           {pod.containers.map((c, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.7rem' }}>
-              <div style={{ 
-                width: '8px', 
-                height: '8px', 
-                borderRadius: '50%', 
-                background: c.status === 'running' ? '#10b981' : c.status === 'terminated' ? '#6b7280' : '#f59e0b' 
+              <div style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                background: c.status === 'running' ? '#10b981' : c.status === 'terminated' ? '#6b7280' : '#f59e0b'
               }} />
               <span style={{ color: '#e5e7eb' }}>{c.name}</span>
               <span style={{ color: '#6b7280' }}>({c.status})</span>

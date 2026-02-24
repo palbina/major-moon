@@ -50,13 +50,13 @@ export default function MetricsDashboardSimulator() {
 
     const interval = setInterval(() => {
       const now = Date.now();
-      
+
       const baseCpu = 40 + Math.sin(now / 10000) * 20;
       const spikeCpu = Math.random() > 0.85 ? 40 : 0;
       const newCpu = Math.min(95, Math.max(10, baseCpu + spikeCpu + Math.random() * 15));
-      
+
       const newMem = 60 + Math.sin(now / 15000) * 10 + Math.random() * 10;
-      
+
       const baseReq = 500 + Math.sin(now / 8000) * 200;
       const spikeReq = Math.random() > 0.9 ? 800 : 0;
       const newReq = Math.max(100, baseReq + spikeReq + Math.random() * 200);
@@ -95,7 +95,7 @@ export default function MetricsDashboardSimulator() {
 
   const renderChart = (data: MetricPoint[], color: string, max: number = 100) => {
     if (data.length < 2) return null;
-    
+
     const points = data.map((d, i) => {
       const x = (i / (data.length - 1)) * 100;
       const y = 100 - (d.value / max) * 100;
@@ -130,19 +130,20 @@ export default function MetricsDashboardSimulator() {
   const currentReq = requestsData.length > 0 ? requestsData[requestsData.length - 1].value : 0;
 
   return (
-    <div style={{ 
-      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)', 
-      borderRadius: '1rem', 
+    <div style={{
+      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)',
+      borderRadius: '1rem',
       padding: '1.5rem',
       border: '1px solid #30363d',
       fontFamily: "'JetBrains Mono', monospace",
-      fontSize: '0.75rem'
+      fontSize: '0.75rem',
+      minWidth: '450px'
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <div style={{ color: '#58a6ff', fontWeight: 'bold' }}>{t.title}</div>
-        <div style={{ 
-          padding: '0.25rem 0.5rem', 
-          borderRadius: '0.25rem', 
+        <div style={{
+          padding: '0.25rem 0.5rem',
+          borderRadius: '0.25rem',
           background: getAlertColor(alertLevel),
           color: '#fff',
           fontSize: '0.6rem',
@@ -177,15 +178,15 @@ export default function MetricsDashboardSimulator() {
       </div>
 
       {alertLevel !== 'normal' && (
-        <div style={{ 
-          padding: '0.5rem', 
+        <div style={{
+          padding: '0.5rem',
           marginBottom: '1rem',
-          background: alertLevel === 'critical' ? '#7f1d1d' : '#78350f', 
+          background: alertLevel === 'critical' ? '#7f1d1d' : '#78350f',
           borderRadius: '0.375rem',
           border: `1px solid ${getAlertColor(alertLevel)}`
         }}>
           <div style={{ color: '#fca5a5', fontSize: '0.65rem' }}>
-            {alertLevel === 'critical' 
+            {alertLevel === 'critical'
               ? (locale === 'en' ? '⚠ CPU usage critical! Scaling triggered.' : '⚠ ¡Uso de CPU crítico! Escalado activado.')
               : (locale === 'en' ? '⚠ High CPU usage detected.' : '⚠ Alto uso de CPU detectado.')
             }

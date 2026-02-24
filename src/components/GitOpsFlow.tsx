@@ -113,13 +113,14 @@ export default function GitOpsFlow() {
   };
 
   return (
-    <div style={{ 
-      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)', 
-      borderRadius: '1rem', 
+    <div style={{
+      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)',
+      borderRadius: '1rem',
       padding: '1.5rem',
       border: '1px solid #30363d',
       fontFamily: "'JetBrains Mono', monospace",
-      fontSize: '0.75rem'
+      fontSize: '0.75rem',
+      minWidth: '450px'
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <div style={{ color: '#58a6ff', fontWeight: 'bold' }}>{t.title}</div>
@@ -162,7 +163,7 @@ export default function GitOpsFlow() {
           const status = getStatus(step.id);
           const isActive = status === 'active';
           const isComplete = status === 'complete';
-          
+
           return (
             <div key={step.id} style={{ display: 'flex', alignItems: 'center' }}>
               <button

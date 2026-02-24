@@ -60,7 +60,7 @@ export default function ServiceMeshVisualizer() {
   const simulateTraffic = () => {
     if (isSimulating) return;
     setIsSimulating(true);
-    
+
     const flows: TrafficFlow[] = [
       { from: 'gateway', to: 'waypoint', amount: 100, latency: 5 },
       { from: 'waypoint', to: 'frontend', amount: 80, latency: 15 },
@@ -98,20 +98,21 @@ export default function ServiceMeshVisualizer() {
   };
 
   return (
-    <div style={{ 
-      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)', 
-      borderRadius: '1rem', 
+    <div style={{
+      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)',
+      borderRadius: '1rem',
       padding: '1.5rem',
       border: '1px solid #30363d',
       fontFamily: "'JetBrains Mono', monospace",
-      fontSize: '0.75rem'
+      fontSize: '0.75rem',
+      minWidth: '450px'
     }}>
       <div style={{ color: '#58a6ff', fontWeight: 'bold', marginBottom: '1rem' }}>{t.title}</div>
 
-      <div style={{ 
-        position: 'relative', 
-        height: '200px', 
-        background: '#0d1117', 
+      <div style={{
+        position: 'relative',
+        height: '200px',
+        background: '#0d1117',
         borderRadius: '0.5rem',
         marginBottom: '1rem',
         overflow: 'hidden'
@@ -175,9 +176,9 @@ export default function ServiceMeshVisualizer() {
             }}>
               {service.type === 'gateway' ? 'GW' : service.type === 'ztunnel' ? 'ZT' : 'SC'}
             </div>
-            <div style={{ 
-              color: '#e5e7eb', 
-              fontSize: '0.6rem', 
+            <div style={{
+              color: '#e5e7eb',
+              fontSize: '0.6rem',
               marginTop: '0.25rem',
               textAlign: 'center',
               maxWidth: '80px'

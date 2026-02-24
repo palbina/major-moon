@@ -63,15 +63,15 @@ export default function ArgoRolloutsSimulator() {
     if (isDeploying) return;
     setIsDeploying(true);
     setCurrentStep(0);
-    
-    const steps = strategy === 'canary' 
+
+    const steps = strategy === 'canary'
       ? [10, 25, 50, 75, 100]
       : strategy === 'blue-green'
-      ? [0, 0, 50, 100, 100]
-      : [25, 50, 75, 100, 100];
+        ? [0, 0, 50, 100, 100]
+        : [25, 50, 75, 100, 100];
 
     let stepIndex = 0;
-    
+
     const interval = setInterval(() => {
       if (stepIndex >= steps.length) {
         clearInterval(interval);
@@ -90,7 +90,7 @@ export default function ArgoRolloutsSimulator() {
           version: 'v2' as const,
           status: 'ready' as const
         })));
-        
+
         if (percent === 100) {
           setV1Pods([]);
         }
@@ -113,14 +113,14 @@ export default function ArgoRolloutsSimulator() {
           version: 'v2' as const,
           status: 'ready' as const
         })));
-        
+
         const v1Count = totalPods - v2Count;
         setV1Pods(Array.from({ length: v1Count }, (_, i) => ({
           id: i + 1,
           version: 'v1' as const,
           status: percent === 100 ? 'draining' as const : 'active' as const
         })));
-        
+
         if (percent === 100) {
           setTimeout(() => setV1Pods([]), 1500);
         }
@@ -151,13 +151,14 @@ export default function ArgoRolloutsSimulator() {
   };
 
   return (
-    <div style={{ 
-      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)', 
-      borderRadius: '1rem', 
+    <div style={{
+      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)',
+      borderRadius: '1rem',
       padding: '1.5rem',
       border: '1px solid #30363d',
       fontFamily: "'JetBrains Mono', monospace",
-      fontSize: '0.75rem'
+      fontSize: '0.75rem',
+      minWidth: '450px'
     }}>
       <div style={{ marginBottom: '1rem' }}>
         <div style={{ color: '#58a6ff', fontWeight: 'bold', marginBottom: '0.5rem' }}>{t.title}</div>
@@ -221,10 +222,10 @@ export default function ArgoRolloutsSimulator() {
         ))}
       </div>
 
-      <div style={{ 
-        display: 'flex', 
-        gap: '0.5rem', 
-        justifyContent: 'center', 
+      <div style={{
+        display: 'flex',
+        gap: '0.5rem',
+        justifyContent: 'center',
         minHeight: '60px',
         padding: '0.75rem',
         background: '#0d1117',

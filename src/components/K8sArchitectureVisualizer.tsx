@@ -103,20 +103,21 @@ export default function K8sArchitectureVisualizer() {
   );
 
   return (
-    <div style={{ 
-      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)', 
-      borderRadius: '1rem', 
+    <div style={{
+      background: 'linear-gradient(180deg, #0d1117 0%, #161b22 100%)',
+      borderRadius: '1rem',
       padding: '1.5rem',
       border: '1px solid #30363d',
       fontFamily: "'JetBrains Mono', monospace",
       fontSize: '0.75rem',
-      position: 'relative'
+      position: 'relative',
+      minWidth: '450px'
     }}>
       <div style={{ color: '#58a6ff', fontWeight: 'bold', marginBottom: '1rem' }}>{t.title}</div>
-      
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(4, 1fr)', 
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
         gap: '0.75rem',
         position: 'relative',
         zIndex: 1
@@ -158,10 +159,10 @@ export default function K8sArchitectureVisualizer() {
               opacity: selectedNode && selectedNode !== node.id ? 0.5 : 1
             }}
           >
-            <div style={{ 
-              width: '32px', 
-              height: '32px', 
-              borderRadius: '50%', 
+            <div style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
               background: getNodeColor(node.type, node.status),
               display: 'flex',
               alignItems: 'center',
@@ -173,8 +174,8 @@ export default function K8sArchitectureVisualizer() {
               {node.type === 'control-plane' ? 'CP' : node.type === 'worker' ? 'W' : node.type === 'pod' ? 'P' : 'S'}
             </div>
             <div style={{ color: '#e5e7eb', fontSize: '0.65rem', fontWeight: 600 }}>{node.label}</div>
-            <div style={{ 
-              fontSize: '0.55rem', 
+            <div style={{
+              fontSize: '0.55rem',
               color: getStatusColor(node.status),
               textTransform: 'uppercase'
             }}>
@@ -185,10 +186,10 @@ export default function K8sArchitectureVisualizer() {
       </div>
 
       {selected && (
-        <div style={{ 
-          marginTop: '1rem', 
-          padding: '1rem', 
-          background: '#1f2937', 
+        <div style={{
+          marginTop: '1rem',
+          padding: '1rem',
+          background: '#1f2937',
           borderRadius: '0.5rem',
           border: '1px solid #374151'
         }}>
