@@ -2,6 +2,7 @@
 import ContactCTA from '../components/ContactCTA.astro';
 import Hero from '../components/Hero.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.tsx';
 ---
 
 <BaseLayout title="About | Peter" description="About Peter's DevOps Journey">
@@ -26,10 +27,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 						I am a passionate DevOps Engineer with a strong background in Linux administration, Cloud Computing, and Container Orchestration.
 						My focus is on building scalable, reliable, and secure infrastructure using modern practices like GitOps and Infrastructure as Code.
 					</p>
-					<p>
-						I have extensive experience with Kubernetes, maintaining high-availability clusters and implementing automated CI/CD pipelines.
-						I enjoy solving complex infrastructure challenges and optimizing system performance.
-					</p>
+					<ExperienceTimeline client:visible />
 				</div>
 			</section>
 			<section>

@@ -2,6 +2,7 @@
 import ContactCTA from '../../components/ContactCTA.astro';
 import Hero from '../../components/Hero.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ExperienceTimeline from '../../components/ExperienceTimeline.tsx';
 ---
 
 <BaseLayout title="Sobre mí | Peter" description="La trayectoria de Peter como DevOps">
@@ -26,10 +27,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 						Soy un Ingeniero DevOps apasionado con sólidos conocimientos en administración Linux, Cloud Computing y Orquestación de Contenedores.
 						Mi enfoque es construir infraestructura escalable, confiable y segura usando prácticas modernas como GitOps e Infraestructura como Código.
 					</p>
-					<p>
-						Tengo amplia experiencia con Kubernetes, manteniendo clústers de alta disponibilidad e implementando flujos de integración y entrega continua automatizados.
-						Disfruto resolviendo retos complejos de infraestructura y optimizando el rendimiento de sistemas.
-					</p>
+					<ExperienceTimeline client:visible />
 				</div>
 			</section>
 			<section>
