@@ -106,27 +106,7 @@ export default function K8sArchitectureVisualizer() {
     const newPod: Pod = { id: newPodId, name: `web-app-${Math.floor(Math.random() * 1000)}`, status: 'Pending' };
 
     setPods(p => [...p, newPod]);
-
-    // Simulate Kube Scheduler
-    setTimeout(() => {
-      setPods(p => p.map(pod => pod.id === newPodId ? { ...pod, status: 'ContainerCreating' } : pod));
-
-      setTimeout(() => {
-        // Find a healthy worker node
-        const workers = nodes.filter(n => n.role === 'worker' && n.status === 'Ready');
-        const targetNode = workers.length > 0 ? workers[Math.floor(Math.random() * workers.length)].id : undefined;
-
-        setPods(p => p.map(pod => pod.id === newPodId ? { ...pod, status: targetNode ? 'Running' : 'Pending', nodeId: targetNode } : pod));
-
-        if (targetNode) {
-          // Increase node usage
-          setNodes(ns => ns.map(n => n.id === targetNode ? { ...n, usage: { cpu: Math.min(100, n.usage.cpu + 5), memory: Math.min(100, n.usage.memory + 8) } } : n));
-        }
-
-        setIsSimulating(false);
-      }, 1500);
-
-    }, 800);
+    setTimeout(() => setIsSimulating(false), 800);
   };
 
   const toggleNodeStatus = (nodeId: string) => {
@@ -163,19 +143,37 @@ export default function K8sArchitectureVisualizer() {
 
   const deployReplica = (name: string) => {
     const newPodId = `p${Date.now()}-${Math.random()}`;
-    const newPod: Pod = { id: newPodId, name, status: 'ContainerCreating' };
+    const newPod: Pod = { id: newPodId, name, status: 'Pending' };
     setPods(p => [...p, newPod]);
-
-    setTimeout(() => {
-      setNodes(currentNodes => {
-        const workers = currentNodes.filter(n => n.role === 'worker' && n.status === 'Ready');
-        const targetNode = workers.length > 0 ? workers[Math.floor(Math.random() * workers.length)].id : undefined;
-
-        setPods(p => p.map(pod => pod.id === newPodId ? { ...pod, status: targetNode ? 'Running' : 'Pending', nodeId: targetNode } : pod));
-        return currentNodes;
-      });
-    }, 1200);
   };
+
+  // Kube-Scheduler Simulation
+  useEffect(() => {
+    const hasCP = nodes.some(n => n.role === 'control-plane' && n.status === 'Ready');
+    const healthyWorkers = nodes.filter(n => n.role === 'worker' && n.status === 'Ready');
+
+    if (hasCP && healthyWorkers.length > 0) {
+      setPods(currentPods => {
+        let changed = false;
+        const newPods = currentPods.map(pod => {
+          if (!pod.nodeId && pod.status === 'Pending') {
+            changed = true;
+            const targetNode = healthyWorkers[Math.floor(Math.random() * healthyWorkers.length)].id;
+
+            // Kubelet will start the container shortly after scheduling
+            setTimeout(() => {
+              setPods(pds => pds.map(p => p.id === pod.id ? { ...p, status: 'Running' as const } : p));
+              setNodes(ns => ns.map(n => n.id === targetNode ? { ...n, usage: { cpu: Math.min(100, n.usage.cpu + 5), memory: Math.min(100, n.usage.memory + 8) } } : n));
+            }, 1000 + Math.random() * 1000);
+
+            return { ...pod, status: 'ContainerCreating' as const, nodeId: targetNode };
+          }
+          return pod;
+        });
+        return changed ? (newPods as Pod[]) : currentPods;
+      });
+    }
+  }, [nodes, pods]);
 
   return (
     <div style={{
