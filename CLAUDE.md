@@ -10,6 +10,8 @@ This project uses AI-generated context documentation. Each entry below links to 
   Revamped the interactive React components ArgoRolloutsSimulator and GitOpsFlow to include realistic terminal logs, synchronous async logic, and modern action graph visuals that mirror real Kubernetes deployment workflows.
 - **i18n & UX Enhancements** (2026-02-23) - [Details](.ai-context/features/i18n-and-ui-enhancements.md)
   Implemented comprehensive internationalization (i18n) to support English and Spanish natively, along with a complete UX upgrade featuring a smart, floating, glassmorphic sticky header.
+- **Interactive Islands Enhancements: Experience Timeline & Terminal** (2026-02-24) - [Details](.ai-context/features/interactive-islands-enhancements.md)
+  Added a new interactive Git-style ExperienceTimeline to the About pages and upgraded the Home page Terminal island with history navigation (up/down arrows), autocomplete (tab), and modern glassmorphic aesthetics.
 - **Portfolio Update: DevOps Capabilities Showcase** (2026-02-21) - [Details](.ai-context/features/portfolio-update-kubernetes-cluster.md)
   Rebranding and comprehensive content update of the Astro portfolio to clearly reflect a DevOps Engineer identity.
 
