@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import SplineIsland from '../components/SplineIsland';
+---
+
+<BaseLayout title="Spline 3D Integration Test | Peter" description="Testing Spline 3D interactive scene in Astro">
+	<div class="stack gap-20 lg:gap-48">
+		<main class="wrapper stack gap-8 lg:gap-20">
+			<Hero
+				title="Spline 3D Experience"
+				tagline="Testing the integration of interactive 3D scenes using Astro Islands."
+				align="start"
+			/>
+
+			<section class="section">
+				<div class="grid grid-cols-1 lg:grid-cols-1 gap-12">
+					<div class="premium-card">
+						<h3 class="text-xl font-bold mb-6 text-white/80">Concept Scene A</h3>
+						<SplineIsland 
+							client:only="react" 
+							scene="https://prod.spline.design/XFgTeIbAEJdSOU3x/scene.splinecode" 
+						/>
+					</div>
+					
+					<div class="premium-card">
+						<h3 class="text-xl font-bold mb-6 text-white/80">Concept Scene B</h3>
+						<SplineIsland 
+							client:only="react" 
+							scene="https://prod.spline.design/NHgXR6kv9RmwC2x1/scene.splinecode" 
+							badgeText="Experimental UI"
+						/>
+					</div>
+
+					<div class="premium-card">
+						<h3 class="text-xl font-bold mb-6 text-white/80">Concept Scene C</h3>
+						<SplineIsland 
+							client:only="react" 
+							scene="https://prod.spline.design/esf6payoGqJdygPR/scene.splinecode" 
+							badgeText="Cyber Architecture"
+						/>
+					</div>
+
+					<div class="premium-card">
+						<h3 class="text-xl font-bold mb-6 text-white/80">Concept Scene D</h3>
+						<SplineIsland 
+							client:only="react" 
+							scene="https://prod.spline.design/47MZ6kLFaxA8MIY1/scene.splinecode" 
+							badgeText="Core Engine"
+						/>
+					</div>
+
+					<div class="premium-card">
+						<h3 class="text-xl font-bold mb-6 text-white/80">Concept Scene E</h3>
+						<SplineIsland 
+							client:only="react" 
+							scene="https://prod.spline.design/NI0sFe0J09VQIAZX/scene.splinecode" 
+							badgeText="Neural Flow"
+						/>
+					</div>
+				</div>
+			</section>
+
+			<section class="section content">
+				<div class="stack gap-4">
+					<h2 class="text-2xl font-bold">Why this matters?</h2>
+					<p>
+						Integrating 3D experiences like Spline into DevOps portfolios allows us to visualize complex 
+						infrastructure, pipelines, and data flows in a much more engaging way.
+					</p>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+						<div class="card p-6 bg-white/5 rounded-2xl border border-white/10">
+							<h3 class="text-lg font-semibold mb-2 text-accent-light">Interactive</h3>
+							<p class="text-sm opacity-70">Users can rotate, click, and explore the infrastructure models in real-time.</p>
+						</div>
+						<div class="card p-6 bg-white/5 rounded-2xl border border-white/10">
+							<h3 class="text-lg font-semibold mb-2 text-accent-light">Performant</h3>
+							<p class="text-sm opacity-70">Using Astro Islands, we only load the heavy Spline runtime where it's needed.</p>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+</BaseLayout>
+
+<style>
+	.section {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.premium-card {
+		padding: 1rem;
+		background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+		border-radius: 2.5rem;
+		border: 1px solid rgba(255,255,255,0.1);
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+	}
+
+	.content {
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.text-accent-light {
+		color: var(--accent-light);
+	}
+
+	@media (min-width: 50em) {
+		.premium-card {
+			padding: 2rem;
+		}
+	}
+</style>

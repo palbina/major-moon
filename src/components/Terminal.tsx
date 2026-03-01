@@ -15,6 +15,7 @@ const commands: Record<string, (args: string[], lang: string, flags: string[], c
         const dict: Dict = {
             en: `Available commands:
   help          Show this help message
+  open <target> Navigate or open links
   whoami        Display current user
   pwd           Print working directory
   ls [path]     List directory contents
@@ -37,6 +38,7 @@ const commands: Record<string, (args: string[], lang: string, flags: string[], c
   helm          Helm package manager`,
             es: `Comandos disponibles:
   help          Mostrar ayuda
+  open <ruta>   Navegar o abrir enlaces
   whoami        Mostrar usuario actual
   pwd           Mostrar directorio actual
   ls [ruta]     Listar contenido
@@ -59,6 +61,34 @@ const commands: Record<string, (args: string[], lang: string, flags: string[], c
   helm          Gestor de paquetes Helm`
         };
         return dict[lang] || dict.en;
+    },
+    open: (args, lang) => {
+        const target = args[0]?.toLowerCase();
+
+        const pages: Record<string, string> = {
+            'about': '/about',
+            'work': '/work',
+            'github': 'https://github.com/peter-devops',
+            'linkedin': 'https://linkedin.com/in/peter-devops'
+        };
+
+        if (!target) {
+            return lang === 'es'
+                ? 'open: especifica un destino (ej. about, work, github, linkedin)'
+                : 'open: please specify a target (e.g., about, work, github, linkedin)';
+        }
+
+        if (pages[target]) {
+            if (pages[target].startsWith('http')) {
+                window.open(pages[target], '_blank');
+            } else {
+                const localePrefix = lang === 'es' ? '/es' : '';
+                window.location.href = localePrefix + pages[target];
+            }
+            return lang === 'es' ? `Abriendo ${target}...` : `Opening ${target}...`;
+        }
+
+        return lang === 'es' ? `open: destino no encontrado '${target}'` : `open: target not found '${target}'`;
     },
     whoami: () => 'peter',
     pwd: (_, __, ___, cwd) => cwd,
@@ -527,6 +557,8 @@ export default function Terminal() {
     const [input, setInput] = useState('');
     const [cwd, setCwd] = useState('/home/peter');
     const [historyIndex, setHistoryIndex] = useState(-1);
+    const [showHint, setShowHint] = useState(true);
+    const [hintText, setHintText] = useState('try: open about');
 
     const inputRef = useRef<HTMLInputElement>(null);
     const terminalRef = useRef<HTMLDivElement>(null);
@@ -544,8 +576,21 @@ export default function Terminal() {
         }
     }, [history]);
 
+    // Animar las sugerencias del call-to-action
+    useEffect(() => {
+        if (!showHint) return;
+        const hints = ['open about', 'open work', 'help', 'skills', 'docker ps'];
+        let idx = 0;
+        const interval = setInterval(() => {
+            idx = (idx + 1) % hints.length;
+            setHintText(`try: ${hints[idx]}`);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, [showHint]);
+
     const executeCommand = (cmd: string) => {
         setHistoryIndex(-1); // reset history nav
+        setShowHint(false); // hide hint when user executes something
         const trimmed = cmd.trim();
         if (!trimmed) {
             setHistory(prev => [...prev, { cmd: '', output: '' }]);
@@ -659,6 +704,29 @@ export default function Terminal() {
                 .terminal-dots:hover div {
                     transform: scale(1.1);
                 }
+                @keyframes bounceHorizontal {
+                    0%, 100% { transform: translateX(0); }
+                    50% { transform: translateX(5px); }
+                }
+                .cta-hint {
+                    position: absolute;
+                    right: 1.5rem;
+                    bottom: 4rem;
+                    background: rgba(63, 185, 80, 0.15);
+                    border: 1px solid rgba(63, 185, 80, 0.4);
+                    color: #3fb950;
+                    padding: 0.4rem 0.8rem;
+                    border-radius: 0.5rem;
+                    font-size: 0.75rem;
+                    backdrop-filter: blur(4px);
+                    animation: bounceHorizontal 2s infinite ease-in-out;
+                    pointer-events: none;
+                    opacity: 0;
+                    transition: opacity 0.5s ease-in-out;
+                }
+                .cta-hint.show {
+                    opacity: 1;
+                }
             `}</style>
 
             {/* Window Controls Header */}
@@ -703,13 +771,16 @@ export default function Terminal() {
                 </div>
             ))}
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.25rem' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.25rem', position: 'relative' }}>
                 <span style={{ color: '#3fb950', fontWeight: 'bold' }}>❯</span>
                 <input
                     ref={inputRef}
                     type="text"
                     value={input}
-                    onInput={(e) => setInput((e.target as HTMLInputElement).value)}
+                    onInput={(e) => {
+                        setInput((e.target as HTMLInputElement).value);
+                        if (showHint) setShowHint(false);
+                    }}
                     onKeyDown={handleKeyDown}
                     spellcheck={false}
                     autoComplete="off"
@@ -726,6 +797,9 @@ export default function Terminal() {
                         caretColor: '#3fb950'
                     }}
                 />
+                <div className={`cta-hint ${showHint ? 'show' : ''}`}>
+                    {hintText} ↵
+                </div>
             </form>
         </div>
     );
